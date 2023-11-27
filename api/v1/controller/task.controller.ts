@@ -11,12 +11,23 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     deleted: false
   }
 
+  //Bộ lọc
   const status = req.query.status;
   if (status) {
     find.status = status.toString();
   }
+  //End bộ lọc
 
-  const tasks = await Task.find(find);
+  //Sắp xếp
+  let sort = {};
+  const sortKey = req.query.sortKey;
+  const sortValue = req.query.sortValue;
+  if (sortKey && sortValue) {
+    sort[sortKey.toString()] = sortValue.toString();
+  }
+  //End sắp xếp
+
+  const tasks = await Task.find(find).sort(sort);
   res.json(tasks);
 }
 
