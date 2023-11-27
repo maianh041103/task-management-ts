@@ -1,5 +1,4 @@
 import express, { Request, Response, Router } from 'express';
-import Task from '../model/task.model';
 import * as controller from "../controller/task.controller";
 
 const route: Router = express();

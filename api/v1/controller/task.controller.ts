@@ -3,9 +3,20 @@ import Task from "../model/task.model";
 
 //[GET] /api/v1/tasks
 export const index = async (req: Request, res: Response): Promise<void> => {
-  const tasks = await Task.find({
+  interface Find {
+    deleted: boolean,
+    status?: string
+  }
+  const find: Find = {
     deleted: false
-  });
+  }
+
+  const status = req.query.status;
+  if (status) {
+    find.status = status.toString();
+  }
+
+  const tasks = await Task.find(find);
   res.json(tasks);
 }
 
