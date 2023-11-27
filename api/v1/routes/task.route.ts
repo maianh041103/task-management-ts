@@ -9,4 +9,5 @@ route.get("/detail/:id", controller.detail);
 
 route.patch("/change-status/:id", controller.changeStatus);
 
+route.patch("/change-multi", controller.changeMulti);
 export const taskRouter: Router = route;

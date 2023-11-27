@@ -89,9 +89,9 @@ export const detail = async (req: Request, res: Response): Promise<void> => {
 //[PATCH] /api/v1/tasks/change-status/:id
 export const changeStatus = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = req.params.id;
-    const status = req.body.status;
-    const StatusType = ["initial", "doing", "finish", "pending", "notFinish"];
+    const id: string = req.params.id;
+    const status: string = req.body.status;
+    const StatusType: string[] = ["initial", "doing", "finish", "pending", "notFinish"];
     if (StatusType.includes(status)) {
       await Task.updateOne({
         _id: id,
@@ -116,6 +116,47 @@ export const changeStatus = async (req: Request, res: Response): Promise<void> =
       code: 400,
       message: "Không tìm thấy công việc"
     })
+  }
+
+}
+
+//[PATCH] /api/v1/tasks/change-multi
+export const changeMulti = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const ids: string[] = req.body.ids;
+    const key: string = req.body.key;
+    const value: string = req.body.value;
+
+    enum keyType {
+      STATUS = "status",
+      DELETE = "delete"
+    };
+
+    switch (key) {
+      case keyType.STATUS:
+        await Task.updateMany({
+          _id: { $in: ids }
+        }, {
+          status: value
+        });
+        res.json({
+          code: 200,
+          message: "Cập nhật trạng thái công việc thành công"
+        })
+        break;
+      default:
+        res.json({
+          code: 400,
+          message: "Không tìm thấy tiêu chí cập nhật"
+        });
+        break;
+    }
+
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Thay đổi nhiều công việc thất bại"
+    });
   }
 
 }
