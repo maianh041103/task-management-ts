@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import Task from "../model/task.model";
 import { pagination } from "../../../helper/pagination.helper";
+import { search } from "../../../helper/seacrch.helper";
 
 //[GET] /api/v1/tasks
 export const index = async (req: Request, res: Response): Promise<void> => {
   interface Find {
     deleted: boolean,
-    status?: string
+    status?: string,
+    title?: RegExp
   }
   const find: Find = {
     deleted: false
@@ -45,6 +47,15 @@ export const index = async (req: Request, res: Response): Promise<void> => {
 
   objectPagination = pagination(objectPagination, req.query, countRecords);
   //End phân trang
+
+  //Tìm kiếm
+  if (req.query.keyword) {
+    const regex = search(req.query).regex;
+    find["title"] = regex;
+  }
+
+
+  //End tìm kiếm
 
   const tasks = await Task.find(find).sort(sort).limit(objectPagination.limit).skip(objectPagination.skip);
   res.json({
