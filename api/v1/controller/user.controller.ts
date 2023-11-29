@@ -12,6 +12,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       email: data.email,
       deleted: false
     });
+
     if (!emailExist) {
       const info = {
         fullName: data.fullName,
