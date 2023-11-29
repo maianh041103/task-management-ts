@@ -73,3 +73,20 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     message: "Đăng nhập thành công"
   })
 }
+
+//[GET] /api/v1/users/detail
+export const detail = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const user = req["infoUser"];
+    res.json({
+      code: 200,
+      user: user
+    });
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Không tìm thấy tài khoản muốn tìm"
+    })
+  }
+
+}
